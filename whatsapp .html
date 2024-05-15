@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Mensagem Automática</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  function enviarMensagem() {
+    var numeroEnvio = document.getElementById("numeroEnvio").value;
+    var numeroRecebimento = document.getElementById("numeroRecebimento").value;
+    var mensagem = document.getElementById("mensagem").value;
+    var data = document.getElementById("data").value;
+    
+    if (numeroEnvio === "" || numeroRecebimento === "" || mensagem === "" || data === "") {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+    
+    // Verificar se a data é válida (a partir de 2024)
+    var dataAtual = new Date();
+    var dataSelecionada = new Date(data);
+    
+    if (dataSelecionada < dataAtual) {
+      alert("Por favor, selecione uma data futura a partir de 2024.");
+      return;
+    }
+    
+    var mensagemFormatada = encodeURIComponent(mensagem);
+    var url = "https://api.whatsapp.com/send?phone=" + numeroRecebimento + "&text=" + mensagemFormatada;
+    
+    // Programar o envio da mensagem para a data selecionada
+    var diffEmMilissegundos = dataSelecionada.getTime() - dataAtual.getTime();
+    setTimeout(function() {
+      window.open(url);
+    }, diffEmMilissegundos);
+    
+    alert("Mensagem programada para ser enviada em " + data);
+  }
+
+  // Adicionando animação nas funções
+  document.addEventListener('DOMContentLoaded', function() {
+    var inputs = document.querySelectorAll('input, textarea, button');
+    inputs.forEach(function(input) {
+      input.addEventListener('focus', function() {
+        this.classList.add('focus-anim');
+      });
+      input.addEventListener('blur', function() {
+        this.classList.remove('focus-anim');
+      });
+    });
+  });
+</script>
+</head>
+<body>
+
+<div class="container">
+  <h1>Enviar Mensagem Automática no WhatsApp</h1>
+
+  <label for="numeroEnvio">Número de Telefone do Remetente:</label>
+  <input type="text" id="numeroEnvio" placeholder="Digite o número de telefone do remetente">
+
+  <label for="numeroRecebimento">Número de Telefone do Destinatário:</label>
+  <input type="text" id="numeroRecebimento" placeholder="Digite o número de telefone do destinatário">
+
+  <label for="mensagem">Mensagem:</label>
+  <textarea id="mensagem" placeholder="Digite sua mensagem"></textarea>
+
+  <label for="data">Data para enviar:</label>
+  <input type="datetime-local" id="data">
+
+  <button onclick="enviarMensagem()">Enviar Mensagem</button>
+</div>
+
+</body>
+</html>
